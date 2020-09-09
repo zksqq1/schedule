@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///test?useUnicode=yes&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+logging.level.com.test.mybatis.mapper: debug
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+#  mapper-locations: classpath:mybatis/*.xml
+pagehelper:
+  helper-dialect: mysql
+  offset-as-page-num: true
+  page-size-zero: true
+  row-bounds-with-count: true
