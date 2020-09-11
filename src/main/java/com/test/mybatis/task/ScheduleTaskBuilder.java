@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @RequiredArgsConstructor
 @Data
-public class MyScheduleTaskBuilder {
+public class ScheduleTaskBuilder {
     @NonNull
     private String taskId;
     @NonNull

@@ -3,8 +3,6 @@ package com.test.mybatis.controller;
 import com.test.mybatis.entity.User;
 import com.test.mybatis.mapper.UserMapper;
 import com.test.mybatis.service.AService;
-import com.test.mybatis.task.MyScheduleTaskBuilder;
-import com.test.mybatis.task.ScheduleTaskHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,9 +21,6 @@ public class TestController {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private ScheduleTaskHolder fetch;
 
     @GetMapping("/")
     public User test() {
@@ -55,16 +50,4 @@ public class TestController {
         aService.findTest();
         return asd;
     }
-
-    @GetMapping("/cron")
-    public void update(@RequestParam("cron") String cron) {
-        fetch.update("test", cron);
-    }
-
-    @GetMapping("/cron/add")
-    public void add() {
-        fetch.add(new MyScheduleTaskBuilder("test1", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis() + "test1")));
-
-    }
-
 }

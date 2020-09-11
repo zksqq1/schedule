@@ -2,9 +2,7 @@ package com.test.mybatis.task;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,19 +19,19 @@ import java.util.concurrent.ScheduledFuture;
 public class ScheduleTaskHolder {
     @NonNull
     private TaskScheduler taskScheduler;
-    private Map<String, MyScheduleTaskBuilder> map = new HashMap<>();
+    private Map<String, ScheduleTaskBuilder> map = new HashMap<>();
     private Map<String, ScheduledFuture> maps = new HashMap<>();
 
     @PostConstruct
     public void init() {
-        add(new MyScheduleTaskBuilder("test", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis())));
+        add(new ScheduleTaskBuilder("test", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis())));
     }
 
 
-    public void add(MyScheduleTaskBuilder myScheduleTaskBuilder) {
-        map.put(myScheduleTaskBuilder.getTaskId(), myScheduleTaskBuilder);
-        ScheduledFuture<?> future = taskScheduler.schedule(myScheduleTaskBuilder.getRunnable(), myScheduleTaskBuilder.builder());
-        maps.put(myScheduleTaskBuilder.getTaskId(), future);
+    public void add(ScheduleTaskBuilder scheduleTaskBuilder) {
+        map.put(scheduleTaskBuilder.getTaskId(), scheduleTaskBuilder);
+        ScheduledFuture<?> future = taskScheduler.schedule(scheduleTaskBuilder.getRunnable(), scheduleTaskBuilder.builder());
+        maps.put(scheduleTaskBuilder.getTaskId(), future);
     }
 
     public void remove(String taskId) {
