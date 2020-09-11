@@ -20,12 +20,11 @@ public class ScheduleTaskHolder {
     @NonNull
     private TaskScheduler taskScheduler;
     private Map<String, ScheduleTaskBuilder> map = new HashMap<>();
-    private Map<String, ScheduledFuture> maps = new HashMap<>();
+    private Map<String, ScheduledFuture<?>> maps = new HashMap<>();
 
     @PostConstruct
     public void init() {
-        //TODO 可以注入dao，然后从数据库里获取，在这里放入
-//        add(new ScheduleTaskBuilder("test", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis())));
+        //可以注入dao，然后从数据库里获取，在这里放入
     }
 
 
