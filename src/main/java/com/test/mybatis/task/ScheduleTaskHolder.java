@@ -18,9 +18,9 @@ import java.util.concurrent.ScheduledFuture;
 @RequiredArgsConstructor
 public class ScheduleTaskHolder {
     @NonNull
-    private TaskScheduler taskScheduler;
-    private Map<String, ScheduleTaskBuilder> map = new HashMap<>();
-    private Map<String, ScheduledFuture<?>> maps = new HashMap<>();
+    private final TaskScheduler taskScheduler;
+    private final Map<String, ScheduleTaskBuilder> map = new HashMap<>();
+    private final Map<String, ScheduledFuture<?>> maps = new HashMap<>();
 
     @PostConstruct
     public void init() {
