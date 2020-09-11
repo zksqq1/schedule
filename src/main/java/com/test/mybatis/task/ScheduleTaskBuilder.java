@@ -11,7 +11,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * 可以扩充属性
  */
 @RequiredArgsConstructor
 @Data

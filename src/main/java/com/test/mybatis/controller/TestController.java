@@ -1,6 +1,7 @@
 package com.test.mybatis.controller;
 
 import com.test.mybatis.entity.User;
+import com.test.mybatis.exception.CustomException;
 import com.test.mybatis.mapper.UserMapper;
 import com.test.mybatis.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,8 @@ public class TestController {
         return Optional.ofNullable(request.getAttribute("name")).orElse("error").toString();
     }
 
-    @GetMapping(value = {"/test", "/asd"})
-    public String test(@RequestBody String asd) {
-        aService.findTest();
-        return asd;
+    @GetMapping("/testA")
+    public String testA() {
+        throw new CustomException("error");
     }
 }

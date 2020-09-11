@@ -24,7 +24,8 @@ public class ScheduleTaskHolder {
 
     @PostConstruct
     public void init() {
-        add(new ScheduleTaskBuilder("test", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis())));
+        //TODO 可以注入dao，然后从数据库里获取，在这里放入
+//        add(new ScheduleTaskBuilder("test", "0/1 * * * * ?", () -> System.out.println(System.currentTimeMillis())));
     }
 
 
