@@ -2,13 +2,17 @@ package com.test.mybatis.task;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -16,30 +20,42 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Component
 @RequiredArgsConstructor
-public class ScheduleTaskHolder {
+public class ScheduleTaskHolder  implements SchedulingConfigurer {
+    private TaskScheduler taskScheduler;
     @NonNull
-    private final TaskScheduler taskScheduler;
-    private final Map<String, ScheduleTaskBuilder> map = new HashMap<>();
-    private final Map<String, ScheduledFuture<?>> maps = new HashMap<>();
-
-    @PostConstruct
-    public void init() {
-        //可以注入dao，然后从数据库里获取，在这里放入
-    }
-
+    private Executor executor;
+    private final Map<String, ScheduleTaskBuilder> taskBuilderMap = new HashMap<>();
+    private final Map<String, ScheduledFuture<?>> schedulerMap = new HashMap<>();
 
     public void add(ScheduleTaskBuilder scheduleTaskBuilder) {
-        map.put(scheduleTaskBuilder.getTaskId(), scheduleTaskBuilder);
-        ScheduledFuture<?> future = taskScheduler.schedule(scheduleTaskBuilder.getRunnable(), scheduleTaskBuilder.builder());
-        maps.put(scheduleTaskBuilder.getTaskId(), future);
+        ScheduleTaskBuilder absent = taskBuilderMap.putIfAbsent(scheduleTaskBuilder.getTaskId(), scheduleTaskBuilder);
+        if(absent == null) {
+            taskBuilderMap.put(scheduleTaskBuilder.getTaskId(), scheduleTaskBuilder);
+            ScheduledFuture<?> future = this.taskScheduler.schedule(scheduleTaskBuilder.getRunnable(), scheduleTaskBuilder.builder());
+            schedulerMap.put(scheduleTaskBuilder.getTaskId(), future);
+        }
     }
 
     public void remove(String taskId) {
-        map.remove(taskId);
-        maps.remove(taskId).cancel(false);
+        taskBuilderMap.remove(taskId);
+        Optional.ofNullable(schedulerMap.remove(taskId)).ifPresent(scheduledFuture -> scheduledFuture.cancel(false));
     }
 
     public void update(String taskId, String cron) {
-        Optional.of(map.get(taskId)).ifPresent(e -> e.setCron(cron));
+        Optional.of(taskBuilderMap.get(taskId)).ifPresent(e -> e.setCron(cron));
     }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        if(executor != null) {
+            taskRegistrar.setScheduler(executor);
+        }
+        this.taskScheduler = taskRegistrar.getScheduler();
+    }
+
+    //为什么会出现循环依赖？
+//    @Bean(destroyMethod="shutdown")
+//    public Executor taskExecutor() {
+//        return Executors.newScheduledThreadPool(10);
+//    }
 }

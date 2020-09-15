@@ -5,12 +5,13 @@ import com.test.mybatis.exception.CustomException;
 import com.test.mybatis.mapper.UserMapper;
 import com.test.mybatis.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Optional;
 
 /**
  *
@@ -39,10 +40,8 @@ public class TestController {
     }
     @GetMapping("/get")
     public String get() {
-
         ServletRequestAttributes attributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         HttpServletRequest request = attributes.getRequest();
-
         return Optional.ofNullable(request.getAttribute("name")).orElse("error").toString();
     }
 
