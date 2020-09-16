@@ -11,7 +11,7 @@ import org.springframework.scheduling.support.CronTrigger;
  */
 @RequiredArgsConstructor
 @Data
-public class ScheduleTaskBuilder {
+public class ScheduleTaskInfo {
     @NonNull
     private String taskId;
     @NonNull
@@ -19,7 +19,7 @@ public class ScheduleTaskBuilder {
     @NonNull
     private Runnable runnable;
 
-    public Trigger builder() {
+    public Trigger buildTrigger() {
         return triggerContext ->  new CronTrigger(cron).nextExecutionTime(triggerContext);
     }
 }
