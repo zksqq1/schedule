@@ -9,6 +9,10 @@ logging.level.com.test.mybatis.mapper: debug
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+    #禁用一级缓存
+    local-cache-scope: statement
+    #禁用二级缓存
+    cache-enabled: false
 #  mapper-locations: classpath:mybatis/*.xml
 pagehelper:
   helper-dialect: mysql
