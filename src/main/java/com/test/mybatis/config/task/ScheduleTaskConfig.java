@@ -1,7 +1,6 @@
-package com.test.mybatis.config;
+package com.test.mybatis.config.task;
 
 import lombok.Getter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;

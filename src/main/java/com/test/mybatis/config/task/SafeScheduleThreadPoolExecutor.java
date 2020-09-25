@@ -1,4 +1,4 @@
-package com.test.mybatis.config;
+package com.test.mybatis.config.task;
 
 import java.util.concurrent.*;
 

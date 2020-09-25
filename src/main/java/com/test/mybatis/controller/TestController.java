@@ -5,13 +5,17 @@ import com.test.mybatis.exception.CustomException;
 import com.test.mybatis.mapper.UserMapper;
 import com.test.mybatis.service.AService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 /**
  *
@@ -48,5 +52,15 @@ public class TestController {
     @GetMapping("/testA")
     public String testA() {
         throw new CustomException("error");
+    }
+
+    @GetMapping("/testPath/{param}")
+    public String testPath(@PathVariable String param) {
+        return param;
+    }
+
+    @GetMapping("testOk")
+    public String testOk() {
+        return "OK";
     }
 }

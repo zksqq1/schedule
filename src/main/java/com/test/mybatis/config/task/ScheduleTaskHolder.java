@@ -1,4 +1,4 @@
-package com.test.mybatis.config;
+package com.test.mybatis.config.task;
 
 import com.test.mybatis.task.ScheduleTaskInfo;
 import org.springframework.beans.factory.annotation.Autowired;

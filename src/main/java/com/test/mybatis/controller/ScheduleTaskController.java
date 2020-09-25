@@ -1,6 +1,6 @@
 package com.test.mybatis.controller;
 
-import com.test.mybatis.config.ScheduleTaskHolder;
+import com.test.mybatis.config.task.ScheduleTaskHolder;
 import com.test.mybatis.task.ScheduleTaskInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
