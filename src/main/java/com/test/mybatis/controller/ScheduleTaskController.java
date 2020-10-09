@@ -2,7 +2,8 @@ package com.test.mybatis.controller;
 
 import com.test.mybatis.config.task.ScheduleTaskHolder;
 import com.test.mybatis.task.ScheduleTaskInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
+@RequiredArgsConstructor
 public class ScheduleTaskController {
-    @Autowired
+    @NonNull
     private ScheduleTaskHolder taskHolder;
 
     @GetMapping("/cron/{taskId}")

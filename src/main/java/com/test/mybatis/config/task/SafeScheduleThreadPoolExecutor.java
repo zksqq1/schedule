@@ -8,6 +8,14 @@ import java.util.concurrent.*;
 public class SafeScheduleThreadPoolExecutor extends ScheduledThreadPoolExecutor {
     private final int queueCapacity;
 
+    public SafeScheduleThreadPoolExecutor(int poolSize,
+                                          ThreadFactory threadFactory,
+                                          RejectedExecutionHandler handler) {
+        super(poolSize, threadFactory, handler);
+        setMaximumPoolSize(poolSize);
+        this.queueCapacity = 1024;
+    }
+
     public SafeScheduleThreadPoolExecutor(int corePoolSize,
                                           int maximumPoolSize,
                                           int queueCapacity,

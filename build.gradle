@@ -52,4 +52,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.2'
     implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'org.jsoup:jsoup:1.13.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.apache.zookeeper:zookeeper:3.6.2'
 }
