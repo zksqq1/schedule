@@ -8,12 +8,17 @@ import java.util.concurrent.*;
 public class SafeScheduleThreadPoolExecutor extends ScheduledThreadPoolExecutor {
     private final int queueCapacity;
 
+    /**
+     * 队列的长度与poolSize一样，这样可以保证相对快地处理完所有的任务
+     * 采用背压拒绝策略，防止任务增长太快而造成阻塞
+     * @param poolSize
+     * @param threadFactory
+     */
     public SafeScheduleThreadPoolExecutor(int poolSize,
-                                          ThreadFactory threadFactory,
-                                          RejectedExecutionHandler handler) {
-        super(poolSize, threadFactory, handler);
+                                          ThreadFactory threadFactory) {
+        super(poolSize, threadFactory, new CallerRunsPolicy());
         setMaximumPoolSize(poolSize);
-        this.queueCapacity = 1024;
+        this.queueCapacity = poolSize;
     }
 
     public SafeScheduleThreadPoolExecutor(int corePoolSize,

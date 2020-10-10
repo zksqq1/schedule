@@ -11,35 +11,32 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * redis实现的分布式锁
+ * 在集群情况下，如果主Redis挂掉，而锁信息未同步到从Redis。此时从节点被选为主节点时，会存在锁丢失的问题
  */
 @ConditionalOnBean(StringRedisTemplate.class)
 public class RedisDistributedLock extends DistributedLock {
-    private static ScheduledThreadPoolExecutor executor = new SafeScheduleThreadPoolExecutor(10, new NamedThreadFactory("distributedLock-"), new ThreadPoolExecutor.CallerRunsPolicy());
-    private static ConcurrentHashMap<String, Integer> lockCountMap = new ConcurrentHashMap<>();
-    private static ThreadLocal<String> currentThreadId = new ThreadLocal<>();
+    //用来定期延长锁失效时间的线程池
+    private static final ScheduledThreadPoolExecutor executor = new SafeScheduleThreadPoolExecutor(10, 20, 200, new NamedThreadFactory("distributedLock-"), new ThreadPoolExecutor.CallerRunsPolicy());
+    private static final ConcurrentHashMap<String, Integer> lockCountMap = new ConcurrentHashMap<>();
+    private static final ThreadLocal<String> currentThreadId = new ThreadLocal<>();
     @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Override
     public boolean tryLock(String key, long millSeconds) throws CustomException {
         String threadId = currentThreadId.get() == null ? UUID.randomUUID().toString().replace("-", "") : currentThreadId.get();
-        if(threadId != null) {
-            String existsThreadId = redisTemplate.opsForValue().get(key);
-            if(existsThreadId != null) {
-                if (Objects.equals(threadId, existsThreadId)) {
-                    redisTemplate.opsForValue().set(key, existsThreadId, millSeconds, TimeUnit.MILLISECONDS);
-                    lockCountMap.computeIfPresent(key, (k, v) -> lockCountMap.getOrDefault(k, 0) + 1);
-                    return true;
-                } else if (!StringUtils.isEmpty(existsThreadId)) {
-                    throw new CustomException("已被占用，获取锁失败");
-                }
+        String existsThreadId = redisTemplate.opsForValue().get(key);
+        if(existsThreadId != null) {
+            if (Objects.equals(threadId, existsThreadId)) {
+                redisTemplate.opsForValue().set(key, existsThreadId, millSeconds, TimeUnit.MILLISECONDS);
+                lockCountMap.computeIfPresent(key, (k, v) -> lockCountMap.getOrDefault(k, 0) + 1);
+                return true;
+            } else {
+                throw new CustomException("锁已被占用，获取失败");
             }
         }
         Boolean absent = redisTemplate.opsForValue().setIfAbsent(key, threadId, millSeconds, TimeUnit.MILLISECONDS);
@@ -51,7 +48,7 @@ public class RedisDistributedLock extends DistributedLock {
                 }
             };
             executor.schedule(runnable, millSeconds / 3, TimeUnit.MILLISECONDS);
-            //设置这个锁的持有者是当前线程
+            //记录锁的持有者信息到当前线程本地变量中
             if(currentThreadId.get() == null) {
                 currentThreadId.set(threadId);
                 lockCountMap.put(threadId, 1);
