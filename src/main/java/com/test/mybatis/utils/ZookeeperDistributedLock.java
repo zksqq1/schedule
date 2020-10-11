@@ -8,7 +8,6 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -18,9 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * zookeeper实现的分布式锁
+ * zookeeper实现的分布式锁，待测试
  */
-@ConditionalOnBean(ZooKeeper.class)
+//@Component
+//@ConditionalOnBean(ZooKeeper.class)
 public class ZookeeperDistributedLock extends DistributedLock {
     private static final ThreadLocal<String> currentThreadId = new ThreadLocal<>();
     private static final ConcurrentHashMap<String, Integer> lockCountMap = new ConcurrentHashMap<>();
@@ -29,7 +29,7 @@ public class ZookeeperDistributedLock extends DistributedLock {
     private ZooKeeper zooKeeper;
 
     @Override
-    public boolean tryLock(String key, long millSeconds) throws CustomException {
+    public boolean tryLock(String key, long millSeconds, String holderId) throws CustomException {
         CountDownLatch latch = new CountDownLatch(1);
         String createPath = "/" + key;
         String threadId = currentThreadId.get() == null ? UUID.randomUUID().toString().replace("-", "") : currentThreadId.get();
@@ -70,7 +70,7 @@ public class ZookeeperDistributedLock extends DistributedLock {
     }
 
     @Override
-    public void releaseLock(String key) throws CustomException {
+    public void releaseLock(String key, String holderId) throws CustomException {
         String threadId = currentThreadId.get();
         if(threadId != null) {
             String createPath = "/" + key;
@@ -89,7 +89,7 @@ public class ZookeeperDistributedLock extends DistributedLock {
                         } catch (UnsupportedEncodingException e) {
                             throw new CustomException("释放锁异常", e);
                         }
-                    } else if(remaining == 0) {
+                    } else {
                         try {
                             zooKeeper.delete(createPath, -1);
                         } catch (InterruptedException | KeeperException e) {
@@ -97,8 +97,6 @@ public class ZookeeperDistributedLock extends DistributedLock {
                         }
                         currentThreadId.remove();
                         lockCountMap.remove(threadId);
-                    } else {
-                        throw new CustomException("无效的解锁操作");
                     }
                 }
             }, "");

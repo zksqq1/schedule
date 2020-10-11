@@ -13,6 +13,10 @@ plugins {
     id "org.springframework.boot" version "${springBootVersion}"
 }
 
+configurations {
+    compile.exclude module: 'logback-classic'
+}
+
 apply plugin: 'java'
 apply plugin: 'idea'
 // 使用spring boot
