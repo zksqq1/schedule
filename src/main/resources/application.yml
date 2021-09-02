@@ -1,13 +1,14 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///test?useUnicode=yes&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://121.42.242.242:3306/address?useUnicode=yes&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+#    url: jdbc:mysql://121.42.242.242:3306/bluecat?useUnicode=yes&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
-    password: root
+    password: 12345678
   redis:
-    host: localhost
+    host: 121.42.242.242
     port: 6379
-    password: 123456
+    password: lin_test
 logging.level.com.test.mybatis.mapper: debug
 mybatis:
   configuration:
@@ -16,9 +17,12 @@ mybatis:
     local-cache-scope: statement
     #禁用二级缓存
     cache-enabled: false
-#  mapper-locations: classpath:mybatis/*.xml
+  mapper-locations: classpath:mybatis/*.xml
 pagehelper:
   helper-dialect: mysql
   offset-as-page-num: true
   page-size-zero: true
   row-bounds-with-count: true
+server:
+  tomcat:
+    relaxed-query-chars: <

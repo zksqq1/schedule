@@ -1,7 +1,8 @@
 package com.test.mybatis.dto;
 
 import com.test.mybatis.common.ResponseMsgEnum;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * 响应信息

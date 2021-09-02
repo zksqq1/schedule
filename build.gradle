@@ -15,6 +15,7 @@ plugins {
 
 configurations {
     compile.exclude module: 'logback-classic'
+//    compile.exclude module: 'log4j'
 }
 
 apply plugin: 'java'

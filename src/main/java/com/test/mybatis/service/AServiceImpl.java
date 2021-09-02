@@ -18,7 +18,6 @@ public class AServiceImpl implements AService {
     private UserMapper userMapper;
 
     @Override
-    @Transactional
     public void findTest() {
         User user = userMapper.selectByUserId("123");
         try {
@@ -27,6 +26,26 @@ public class AServiceImpl implements AService {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    @Transactional
+    public void tranTest() {
+        User user = new User();
+        user.setUserId("aaaa1");
+        user.setUserCode("bbbb1");
+        user.setPhone("aaaaa2");
+        userMapper.insertUser(user);
+        System.out.println(1 / 0);
+    }
+
+    @Override
+    public void tranTest2() {
+        User user = new User();
+        user.setUserId("aaaa");
+        user.setUserCode("bbbb");
+        user.setPhone("aaaaa");
+        userMapper.insertUser(user);
     }
 
 

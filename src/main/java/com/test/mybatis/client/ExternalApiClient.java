@@ -4,8 +4,8 @@ import com.test.mybatis.client.config.CustomFeignConfig;
 import com.test.mybatis.model.GdParseLocation;
 import com.test.mybatis.model.TxParseLocation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URI;
 
@@ -15,7 +15,7 @@ import java.net.URI;
  * 因为使用的是FastJson来处理Json数据
  * 所以此处将OpenFeign默认的Json解析器由Jackson转为FastJson
  */
-@FeignClient(value = "sfApi", url = "https://commit-openic.sf-express.com", configuration = CustomFeignConfig.class)
+@FeignClient(value = "sfApi", url = "https://commit-openic.sf-express.com", configuration = CustomFeignConfig.class, fallback = Void.class)
 public interface ExternalApiClient {
     /**
      * 百度返回的response_header中的content-type=text/javascript;charset=utf-8，所以用string接收返回值

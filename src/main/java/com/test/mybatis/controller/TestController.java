@@ -1,21 +1,24 @@
 package com.test.mybatis.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.test.mybatis.config.MyProperties;
+import com.test.mybatis.entity.StandardProvince;
 import com.test.mybatis.entity.User;
-import com.test.mybatis.exception.CustomException;
+import com.test.mybatis.mapper.AMapper;
+import com.test.mybatis.mapper.BMapper;
 import com.test.mybatis.mapper.UserMapper;
 import com.test.mybatis.service.AService;
+import com.test.mybatis.utils.TestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
 import java.util.Optional;
-import java.util.StringJoiner;
 
 /**
  *
@@ -27,6 +30,10 @@ public class TestController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MyProperties properties;
+
 
     @GetMapping("/")
     public User test() {
@@ -51,7 +58,7 @@ public class TestController {
 
     @GetMapping("/testA")
     public String testA() {
-        throw new CustomException("error");
+        return JSON.toJSONString(properties);
     }
 
     @GetMapping("/testPath/{param}")
@@ -61,6 +68,30 @@ public class TestController {
 
     @GetMapping("testOk")
     public String testOk() {
+        System.out.println(aService);
+        aService.findTest();
         return "OK";
+    }
+
+    @GetMapping("/transTest")
+    public String testTrans() {
+        aService.tranTest();
+        return "OK";
+    }
+
+    @Autowired
+    private AMapper aMapper;
+    @Autowired
+    private BMapper bMapper;
+
+    @GetMapping("/testMapper")
+    public StandardProvince test(@RequestParam("id") Integer id) {
+        System.out.println(aMapper);
+        System.out.println(bMapper);
+        return id != null && id == 1 ? find(aMapper) : find(bMapper);
+    }
+
+    private StandardProvince find(TestMapper mapper) {
+        return mapper.test();
     }
 }

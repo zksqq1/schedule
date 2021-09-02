@@ -2,16 +2,23 @@ package com.test.mybatis.utils;
 
 import com.test.mybatis.config.task.SafeScheduleThreadPoolExecutor;
 import com.test.mybatis.exception.CustomException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.lucene.util.NamedThreadFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * redis实现的分布式锁

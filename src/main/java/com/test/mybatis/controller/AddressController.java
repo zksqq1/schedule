@@ -3,6 +3,7 @@ package com.test.mybatis.controller;
 import com.test.mybatis.client.ExternalApiClient;
 import com.test.mybatis.model.AddressDetail;
 import com.test.mybatis.model.GdParseLocation;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -21,6 +26,7 @@ import java.util.stream.IntStream;
 /**
  *
  */
+@Api(tags = "地址解析")
 @RestController
 public class AddressController {
 
@@ -33,7 +39,7 @@ public class AddressController {
     public List<AddressDetail> getAddressDetailListByAddress(
             @ApiParam(name = "addressList", value = "详细地址列表", required = true) @RequestBody List<String> addressList) {
         if(addressList.stream().filter(StringUtils::hasText).count() == 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return doGetAddressDetailListByAddress(addressList);
     }
@@ -65,7 +71,7 @@ public class AddressController {
             StringJoiner joiner = new StringJoiner("|");
             addressList.stream().forEach(joiner::add);
             String address = joiner.toString();
-            List<AddressDetail> list = Collections.EMPTY_LIST;
+            List<AddressDetail> list = Collections.emptyList();
             try {
                 GdParseLocation gdLocation = client.getGdLngLat(new URI("https://restapi.amap.com/"), "2b222b483610149c5b6c99ccbe7a415e", address, "json", null, "true");
                 if(Objects.equals(gdLocation.getCount(), String.valueOf(addressList.size()))) {

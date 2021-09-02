@@ -1,6 +1,5 @@
 package com.test.mybatis.client.config;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
@@ -94,37 +93,37 @@ public class CustomFeignConfig {
             if (!logger.isInfoEnabled()) {
                 return;
             }
-            for (int i = 0; i < args.length; i++) {
-                if(args[i] instanceof String) {
-                    Boolean isResponse = local.get();
-                    String arg = (String) args[i];
-                    if(arg.startsWith("http://") || arg.startsWith("https://")) {
-                        logger.info(String.format(methodTag(configKey) + " >>> 请求地址及方法 >>> " + format, args));
-                        //GET方法没有请求体
-                        if("GET".equalsIgnoreCase(args[0].toString())) {
-                            local.set(Boolean.FALSE);
-                        }
-                        break;
-                    } else if(arg.startsWith("{") && !"GET".equalsIgnoreCase(args[0].toString())) {
-                        if(isResponse == null) {
-                            isResponse = Boolean.FALSE;
-                            local.set(Boolean.FALSE);
-                        } else {
-                            isResponse = Boolean.TRUE;
-                        }
-                        String str = isResponse ? ">>> 响应信息 >>> " : ">>> 请求信息 >>> ";
-                        if(args.length > 1) {
-                            logger.info(String.format(methodTag(configKey) + str + format, JSON.toJSONString(args)));
-                        } else {
-                            logger.info(String.format(methodTag(configKey) + str + format, JSON.toJSONString(arg)));
-                        }
-                        if(isResponse) {
-                            local.remove();
-                        }
-                        break;
-                    }
-                }
-            }
+//            for (int i = 0; i < args.length; i++) {
+//                if(args[i] instanceof String) {
+//                    Boolean isResponse = local.get();
+//                    String arg = (String) args[i];
+//                    if(arg.startsWith("http://") || arg.startsWith("https://")) {
+//                        logger.info(String.format(methodTag(configKey) + " >>> 请求地址及方法 >>> " + format, args));
+//                        //GET方法没有请求体
+//                        if("GET".equalsIgnoreCase(args[0].toString())) {
+//                            local.set(Boolean.FALSE);
+//                        }
+//                        break;
+//                    } else if(arg.startsWith("{") && !"GET".equalsIgnoreCase(args[0].toString())) {
+//                        if(isResponse == null) {
+//                            isResponse = Boolean.FALSE;
+//                            local.set(Boolean.FALSE);
+//                        } else {
+//                            isResponse = Boolean.TRUE;
+//                        }
+//                        String str = isResponse ? ">>> 响应信息 >>> " : ">>> 请求信息 >>> ";
+//                        if(args.length > 1) {
+//                            logger.info(String.format(methodTag(configKey) + str + format, JSON.toJSONString(args)));
+//                        } else {
+//                            logger.info(String.format(methodTag(configKey) + str + format, JSON.toJSONString(arg)));
+//                        }
+//                        if(isResponse) {
+//                            local.remove();
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
         }
     }
 }

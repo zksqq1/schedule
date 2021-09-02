@@ -2,7 +2,6 @@ package com.test.mybatis.exception;
 
 import com.test.mybatis.common.ResponseMsgEnum;
 import com.test.mybatis.dto.Response;
-import com.test.mybatis.exception.CustomException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

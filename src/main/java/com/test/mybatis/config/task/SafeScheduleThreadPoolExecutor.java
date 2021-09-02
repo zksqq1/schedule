@@ -10,7 +10,7 @@ public class SafeScheduleThreadPoolExecutor extends ScheduledThreadPoolExecutor 
 
     /**
      * 队列的长度与poolSize一样，这样可以保证相对快地处理完所有的任务
-     * 采用背压拒绝策略，防止任务增长太快而造成阻塞
+     * 采用背压拒绝策略，防止任务增长太快而造成任务丢弃
      * @param poolSize
      * @param threadFactory
      */

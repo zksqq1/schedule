@@ -5,4 +5,8 @@ package com.test.mybatis.service;
  */
 public interface AService {
     void findTest();
+
+    void tranTest();
+
+    void tranTest2();
 }
