@@ -50,7 +50,7 @@ public class AddressDetail {
         if (bean.getLngLat().contains(",")) {
             location = bean.getLngLat().split(",");
         } else {
-            location = new String[]{"", ""};
+            location = new String[]{"", "" };
         }
 
         String city = Objects.equals(bean.getCity(), "[]") || Objects.equals(bean.getCity(), "") ?
